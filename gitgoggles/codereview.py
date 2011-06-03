@@ -182,6 +182,8 @@ def start_review():
 
     # TODO: remove assumption of base branch
     parent = branch in ('staging', 'master',) and 'master' or 'staging'
+    if parent not in repo.branches():
+        parent = repo.master
 
     cr_tag = '%s%s' % (TAG_PREFIX, branch)
 
