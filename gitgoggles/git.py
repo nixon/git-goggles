@@ -147,7 +147,7 @@ class Tag(Ref):
 
 class Repository(object):
     def __init__(self, path=None):
-        self.path = os.path.abspath(path or os.path.curdir)
+        self.path = os.path.realpath(path or os.path.curdir)
         # Hack, make configurable
         self.master = 'master'
         master_sha = self.shell('git', 'log', '-1', '--pretty=format:%H', self.master).split
@@ -201,6 +201,13 @@ class Repository(object):
     def configs(self):
         return dict([ x.partition('=')[0::2] for x in self.shell('git', 'config', '--list').split ])
     configs = property(memoize(configs))
+
+    def in_repo(self):
+        """Is the current directory in a git repo and is it our repo?"""
+        rc = self.shell('git', 'rev-parse', '--git-dir').returncode
+        if rc == 0 and os.path.realpath(os.getcwd()).startswith(self.path):
+            return True
+        return False
 
     def fetch(self):
         log.info('Fetching updates.')
