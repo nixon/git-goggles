@@ -9,8 +9,12 @@ from gitgoggles.progress import handler
 
 TAG_PREFIX = 'codereview--'
 
-def get_status():
-    repo = Repository()
+def get_status(master=None):
+    repo = Repository(master=master)
+
+    console(colored('# Master: ', 'magenta'))
+    console(colored(repo.master, 'cyan'))
+    console(u'\n')
 
     console(colored('# Working Tree: ', 'magenta'))
     console(colored(repo.branch(), 'cyan'))
@@ -171,8 +175,8 @@ def complete_review():
     repo.shell('git', 'tag', '-a', '%s%s' % (TAG_PREFIX, branch), '-f', '-m', 'creating code review for branch %s' % branch)
     print 'Created tag %s%s' % (TAG_PREFIX, branch)
 
-def start_review():
-    repo = Repository()
+def start_review(master=None):
+    repo = Repository(master=master)
 
     if repo.configs.get('gitgoggles.fetch', 'true') != 'false':
         repo.fetch()
@@ -181,7 +185,7 @@ def start_review():
     tags = repo.tags()
 
     # TODO: remove assumption of base branch
-    parent = branch in ('staging', 'master',) and 'master' or 'staging'
+    parent = branch in ('staging', repo.master,) and repo.master or 'staging'
     if parent not in repo.branches():
         parent = repo.master
 
