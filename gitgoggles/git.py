@@ -107,7 +107,7 @@ class Branch(Ref):
 
     def behind(self):
         if self.merge_refspec:
-            # TODO: find a better way to determine how fare behind we are from our branch "parent"
+            # TODO: find a better way to determine how far behind we are from our branch "parent"
             return len(self.repo.shell('git', 'log', '--no-merges', '--pretty=format:%H', '%s..%s' % (self.refspec, self.repo.master)).split)
         return None
     behind = property(log_activity(memoize(behind)))
