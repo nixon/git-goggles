@@ -146,10 +146,10 @@ class Tag(Ref):
     pass
 
 class Repository(object):
-    def __init__(self, path=None):
+    def __init__(self, path=None, master=None):
         self.path = os.path.realpath(path or os.path.curdir)
         # Hack, make configurable
-        self.master = 'master'
+        self.master = master or 'master'
         master_sha = self.shell('git', 'log', '-1', '--pretty=format:%H', self.master).split
         self.master_sha = master_sha and master_sha[0].strip() or ''
 

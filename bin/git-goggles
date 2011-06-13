@@ -12,19 +12,27 @@ def handle_command():
         print 'Not within a git repository.'
         sys.exit(1)
 
+    master = None
+    try:
+        if sys.argv[1] == "-m":
+            del sys.argv[1]
+            master = sys.argv.pop(1)
+    except IndexError:
+        pass
+
     if len(sys.argv) == 1:
         enable_progress()
-        get_status()
+        get_status(master)
     elif len(sys.argv) >= 2:
         if sys.argv[1] == 'codereview':
             if len(sys.argv) == 2:
-                start_review()
+                start_review(master)
             else:
                 complete_review()
         elif sys.argv[1] == 'update':
             update_branches()
         else:
-            print 'usage: git goggles [codereview|codereview complete|update]'
+            print 'usage: git goggles [ -m master_branch ] [codereview|codereview complete|update]'
 
 if __name__ == "__main__":
     try:
