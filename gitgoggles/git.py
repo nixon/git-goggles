@@ -92,11 +92,11 @@ class Branch(Ref):
                 self.merge_refspec = merge_refspec[0].strip()
 
     def pull(self):
-        return bool(self.repo.shell('git', 'log', '--pretty=format:%H', '%s..%s' % (self.refspec, self.parent_refspec)).split)
+        return bool(self.repo.shell('git', 'log', '--pretty=format:%H', '%s..%s' % (self.refspec, self.parent_refspec)).split) or bool(self.behind)
     pull = property(log_activity(memoize(pull)))
 
     def push(self):
-        return bool(self.repo.shell('git', 'log', '--pretty=format:%H', '%s..%s' % (self.parent_refspec, self.refspec)).split)
+        return bool(self.repo.shell('git', 'log', '--pretty=format:%H', '%s..%s' % (self.parent_refspec, self.refspec)).split) or bool(self.ahead)
     push = property(log_activity(memoize(push)))
 
     def ahead(self):
